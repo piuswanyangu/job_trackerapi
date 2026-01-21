@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'apps.applications',
     'apps.analytics',
     'apps.tracking',
+
+    'celery'
 ]
 
 MIDDLEWARE = [
@@ -66,14 +68,11 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-
 }
+
+APPEND_SLASH = False
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
@@ -87,6 +86,14 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Backend API for Job Tracker",
     "VERSION":"1.0.0"
 }
+
+# celery and rabbitmq 
+CELERY_BROKER_URL = "amqp://localhost" 
+CELERY_RESULT_BACKEND = "rpc://"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
 
 ROOT_URLCONF = 'job_trackerapi.urls'
 
