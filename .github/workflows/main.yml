@@ -1,0 +1,62 @@
+name: Django CI/CD
+
+on:
+  push:
+    branches: [main]   # Trigger on push to main
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: jobtracker
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 5672:5672
+          - 15672:15672
+
+    steps:
+      # 1. Checkout the repo
+      - uses: actions/checkout@v3
+
+      # 2. Set up Python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      # 3. Install dependencies
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Run Django migrations
+      - run: python manage.py migrate
+
+      # 5. Run tests
+      - run: python manage.py test
+
+      # 6. Build Docker image
+      - run: docker build -t jobtracker:latest .
+
+      
