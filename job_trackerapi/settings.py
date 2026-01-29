@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'apps.analytics',
     'apps.tracking',
 
-    'celery'
+    'celery',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -88,11 +89,20 @@ SPECTACULAR_SETTINGS = {
 }
 
 # celery and rabbitmq 
-CELERY_BROKER_URL = "amqp://localhost" 
-CELERY_RESULT_BACKEND = "rpc://"
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+CELERY_BROKER_URL = "amqp://guest:guest@rabbitmq:5672//"
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
+
 
 
 ROOT_URLCONF = 'job_trackerapi.urls'
