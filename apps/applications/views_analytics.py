@@ -16,9 +16,12 @@ class DashboardAnalyticsAPIView(APIView):
         if cached:
             return Response(cached)
 
-        analytics = ApplicationAnalytics.objects.get(user=request.user)
+        # This will fetch the record OR create a new one if it's missing
+        analytics, created = ApplicationAnalytics.objects.get_or_create(
+            user=request.user
+        )
+        
         data = AnalyticsSerializer(analytics).data
-
-        cache.set(cache_key, data, timeout=300)  # 5 min cache
+        cache.set(cache_key, data, timeout=300)
 
         return Response(data)
