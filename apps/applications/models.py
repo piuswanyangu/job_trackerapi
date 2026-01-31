@@ -2,6 +2,9 @@
 from django.db import models
 from django.conf import settings
 
+# -----------------------------
+# application model
+# --------------------------------------
 class JobApplication(models.Model):
     STATUS_CHOICES = [
         ("applied", "Applied"),
@@ -20,3 +23,19 @@ class JobApplication(models.Model):
 
     def __str__(self):
         return f"{self.job_title} at {self.company_name}"
+
+
+# -----------------------
+# application analytics
+# ------------------
+class ApplicationAnalytics(models.Model):
+    user = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
+    total_applications = models.IntegerField(default=0)
+    applied = models.IntegerField(default=0)
+    interviewed = models.IntegerField(default=0)
+    offer = models.IntegerField(default=0)
+    rejected = models.IntegerField(default=0)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.email} analytics"

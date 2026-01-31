@@ -1,7 +1,16 @@
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import JobApplicationViewSet
+# Import your ACTUAL views here
+from .views_analytics import DashboardAnalyticsAPIView 
 
 router = DefaultRouter()
-router.register("applications", JobApplicationViewSet,basename="applications")
+# Only register ViewSets here. If you don't have any yet, leave this empty.
+# router.register(r'jobs', JobViewSet) 
 
-urlpatterns = router.urls
+urlpatterns = [
+    # This includes any routes registered in the router
+    path('', include(router.urls)),
+    
+    # This maps the analytics URL to your specific view
+    path('analytics/', DashboardAnalyticsAPIView.as_view(), name='analytics'),
+]
