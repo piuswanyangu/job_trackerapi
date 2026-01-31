@@ -51,9 +51,11 @@ INSTALLED_APPS = [
     'apps.applications',
     'apps.analytics',
     'apps.tracking',
+    'apps.core',
 
     'celery',
     'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -92,16 +94,22 @@ SPECTACULAR_SETTINGS = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
+        "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
 }
 
-CELERY_BROKER_URL = "amqp://guest:guest@rabbitmq:5672//"
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+
+CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672//"
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
+
+CELERY_RESULT_BACKEND = "django-db"
 
 
 
@@ -177,3 +185,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+MIDDLEWARE.insert(1, "apps.core.middleware.ip_tracking.IPTrackingMiddleware")
