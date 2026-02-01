@@ -1,12 +1,12 @@
-📌 Job Tracker API — Backend Documentation
+## 📌 Job Tracker API — Backend Documentation
 
 A scalable, production-ready REST API backend built using Django & Django REST Framework (DRF) to power a full-featured Job Application Tracking System.
 
-📖 Project Overview
+## 📖 Project Overview
 
 The Job Tracker API is a backend system that enables users to efficiently manage and track their job applications throughout the job search lifecycle.
 
-This API provides:
+## This API provides:
 
 Secure authentication & authorization
 
@@ -20,11 +20,11 @@ Scalable architecture
 
 Clean RESTful endpoints
 
-This backend is designed following modern backend engineering principles, emphasizing:
+## This backend is designed following modern backend engineering principles, emphasizing:
 
 Scalability • Maintainability • Performance • Security • Clean Architecture
 
-🏗 Architecture Overview
+## 🏗 Architecture Overview
 Client (Frontend - Next.js / React)
         ↓
 REST API (Django + DRF)
@@ -33,7 +33,7 @@ PostgreSQL Database
         ↓
 Background Tasks (Celery + Redis / RabbitMQ)
 
-⚙ Tech Stack
+## ⚙ Tech Stack
 Layer	Technology
 Backend Framework	Django
 API Layer	Django REST Framework
@@ -63,11 +63,11 @@ job_trackerapi/
 ├── requirements.txt
 └── README.md
 
-🔐 Authentication System
+## 🔐 Authentication System
 
 Authentication is implemented using JWT-based authentication.
 
-Features:
+## Features:
 
 User registration
 
@@ -85,7 +85,7 @@ POST   /api/auth/login/
 POST   /api/auth/refresh/
 GET    /api/auth/profile/
 
-Security:
+## Security:
 
 Password hashing using Django’s built-in secure hashing
 
@@ -93,11 +93,11 @@ Token expiration handling
 
 Protected API routes using permissions
 
-📊 Job Application Management
+## 📊 Job Application Management
 
 This is the core business logic of the system.
 
-Features:
+## Features:
 
 Create job applications
 
@@ -109,7 +109,7 @@ Manage job notes
 
 Analytics & reporting
 
-Application Lifecycle:
+## Application Lifecycle:
 Applied → Interview → Offer → Rejected
 
 Application Model Fields:
@@ -122,7 +122,7 @@ applied_date
 job_url
 notes
 
-🧠 Background Task Processing (Celery)
+## 🧠 Background Task Processing (Celery)
 
 The system uses Celery to handle background jobs such as:
 
@@ -142,7 +142,7 @@ Prevents blocking API requests
 
 Enables scheduled tasks
 
-🗃 Caching Layer
+## 🗃 Caching Layer
 
 Redis caching is implemented for:
 
@@ -156,7 +156,7 @@ This improves:
 
 Performance • Speed • Scalability
 
-🌐 API Documentation (Swagger)
+## 🌐 API Documentation (Swagger)
 
 Interactive API documentation is available via Swagger UI.
 
@@ -173,7 +173,7 @@ Authentication testing
 
 Schema visualization
 
-🛡 Security Best Practices Implemented
+## 🛡 Security Best Practices Implemented
 
 JWT authentication
 
@@ -187,21 +187,21 @@ Environment variable configuration
 
 SQL injection prevention
 
-CSRF protection (where applicable)
+## CSRF protection (where applicable)
 
 🚀 Getting Started (Local Setup)
 1️⃣ Clone Repository
 git clone https://github.com/yourusername/job_trackerapi.git
 cd job_trackerapi
 
-2️⃣ Create Virtual Environment
+## 2️⃣ Create Virtual Environment
 python -m venv venv
 source venv/bin/activate
 
-3️⃣ Install Dependencies
+## 3️⃣ Install Dependencies
 pip install -r requirements.txt
 
-4️⃣ Create .env File
+## 4️⃣ Create .env File
 touch .env
 
 
@@ -211,19 +211,19 @@ DEBUG=True
 SECRET_KEY=your-secret-key
 DATABASE_URL=sqlite:///db.sqlite3
 
-5️⃣ Run Migrations
+## 5️⃣ Run Migrations
 python manage.py migrate
 
-6️⃣ Create Superuser
+## 6️⃣ Create Superuser
 python manage.py createsuperuser
 
-7️⃣ Run Server
+## 7️⃣ Run Server
 python manage.py runserver
 
-8️⃣ Access Admin Panel
+## 8️⃣ Access Admin Panel
 http://127.0.0.1:8000/admin/
 
-🧪 API Testing
+## 🧪 API Testing
 
 You can test APIs using:
 
@@ -233,7 +233,7 @@ Thunder Client
 
 Swagger UI
 
-📈 Performance & Scalability
+## 📈 Performance & Scalability
 
 This backend is designed to scale using:
 
@@ -247,7 +247,7 @@ Proper indexing
 
 Stateless JWT authentication
 
-🧩 Future Improvements Roadmap
+## 🧩 Future Improvements Roadmap
 
 Email notifications
 
@@ -261,7 +261,7 @@ Recommendation system
 
 Microservices architecture
 
-🎯 Design Philosophy
+## 🎯 Design Philosophy
 
 This backend follows:
 
@@ -275,11 +275,11 @@ RESTful API design
 
 Separation of concerns
 
-👨‍💻 Author
+## 👨‍💻 Author
 
-Pius Ndubi
-Full Stack Software Developer
+## Pius Ndubi
+## Full Stack Software Developer
 
-📧 Email: ndubipius6@gmail.com
+## 📧 Email: ndubipius6@gmail.com
 
-🌍 Nairobi, Kenya
+## 🌍 Nairobi, Kenya
