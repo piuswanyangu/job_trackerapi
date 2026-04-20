@@ -1,7 +1,6 @@
 from rest_framework import viewsets, permissions
-from rest_framework.response import Response
 
-from apps.applications.tasks import cache_job_applications
+from apps.applications.tasks import cache_job_applications, generate_user_analytics
 from .models import JobApplication
 from .serializers import JobApplicationSerializer
 
@@ -16,14 +15,26 @@ class JobApplicationViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # save user and IP address automatically
         ip = self.get_client_ip()
-        app_instance = serializer.save(user=self.request.user, ip_address=ip)
-        cache_job_applications.delay(self.request.user.id)
+        serializer.save(user=self.request.user, ip_address=ip)
+        cache_job_applications(self.request.user.id)
+        generate_user_analytics(self.request.user.id)
+
+    def perform_update(self, serializer):
+        serializer.save()
+        cache_job_applications(self.request.user.id)
+        generate_user_analytics(self.request.user.id)
+
+    def perform_destroy(self, instance):
+        user_id = self.request.user.id
+        instance.delete()
+        cache_job_applications(user_id)
+        generate_user_analytics(user_id)
 
     def get_client_ip(self):
         request = self.request
         x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
         if x_forwarded_for:
-            ip = x_forwarded_for.spilt(",")[0]
+            ip = x_forwarded_for.split(",")[0]
         else:
-            ip = request.META.get("REMOTE_ADR")
+            ip = request.META.get("REMOTE_ADDR")
         return ip

@@ -10,11 +10,9 @@ class IPTrackingMiddleware:
         request.client_ip = ip  # Attach it to request first
         
         try:
-            # We call the task asynchronously
-            log_request.delay(ip, request.path, request.method)
-        except Exception as e:
-            # This prevents the whole website from crashing if Redis/Celery is down
-            print(f"Celery task failed: {e}")
+            log_request(ip, request.path, request.method)
+        except Exception:
+            pass
 
         return self.get_response(request)
     

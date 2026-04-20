@@ -9,8 +9,8 @@ class JobApplication(models.Model):
     STATUS_CHOICES = [
         ("applied", "Applied"),
         ("interview", "Interview"),
+        ("offer", "Offer"),
         ("rejected", "Rejected"),
-        ("accepted", "Accepted"),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="applications")

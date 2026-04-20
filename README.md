@@ -1,285 +1,173 @@
-## 📌 Job Tracker API — Backend Documentation
-
-A scalable, production-ready REST API backend built using Django & Django REST Framework (DRF) to power a full-featured Job Application Tracking System.
-
-## 📖 Project Overview
-
-The Job Tracker API is a backend system that enables users to efficiently manage and track their job applications throughout the job search lifecycle.
-
-## This API provides:
-
-Secure authentication & authorization
-
-Application tracking & analytics
-
-User-based data isolation
-
-Background task processing
-
-Scalable architecture
-
-Clean RESTful endpoints
-
-## This backend is designed following modern backend engineering principles, emphasizing:
-
-Scalability • Maintainability • Performance • Security • Clean Architecture
-
-## 🏗 Architecture Overview
-Client (Frontend - Next.js / React)
-        ↓
-REST API (Django + DRF)
-        ↓
-PostgreSQL Database
-        ↓
-Background Tasks (Celery + Redis / RabbitMQ)
-
-## ⚙ Tech Stack
-Layer	Technology
-Backend Framework	Django
-API Layer	Django REST Framework
-Database	PostgreSQL (Production) / SQLite (Local Dev)
-Authentication	JWT (SimpleJWT)
-Async Tasks	Celery
-Message Broker	Redis / RabbitMQ
-Caching	Redis
-API Docs	Swagger / OpenAPI
-Task Result Storage	django-celery-results
-DevOps (Optional)	Docker, CI/CD
-📂 Project Structure
-job_trackerapi/
-│
-├── apps/
-│   ├── accounts/        # Authentication & user management
-│   ├── applications/   # Job application CRUD + analytics
-│   └── core/            # Shared utilities & helpers
-│
-├── config/
-│   ├── settings.py      # Main project settings
-│   ├── urls.py          # Root routing
-│   └── celery.py        # Celery configuration
-│
-├── docker/              # Docker configuration (optional)
-├── manage.py
-├── requirements.txt
-└── README.md
-
-## 🔐 Authentication System
-
-Authentication is implemented using JWT-based authentication.
-
-## Features:
-
-User registration
-
-Secure login
-
-Access token + refresh token
-
-Token rotation
-
-Protected endpoints
-
-Endpoints:
-POST   /api/auth/register/
-POST   /api/auth/login/
-POST   /api/auth/refresh/
-GET    /api/auth/profile/
-
-## Security:
-
-Password hashing using Django’s built-in secure hashing
-
-Token expiration handling
-
-Protected API routes using permissions
-
-## 📊 Job Application Management
-
-This is the core business logic of the system.
-
-## Features:
-
-Create job applications
-
-Update job status
-
-Track interview progress
-
-Manage job notes
-
-Analytics & reporting
-
-## Application Lifecycle:
-Applied → Interview → Offer → Rejected
-
-Application Model Fields:
-company_name
-job_title
-location
-salary_range
-status
-applied_date
-job_url
-notes
-
-## 🧠 Background Task Processing (Celery)
-
-The system uses Celery to handle background jobs such as:
-
-Sending email notifications
-
-Status reminders
-
-Weekly analytics summaries
-
-Async data processing
-
-Benefits:
-
-Improves system responsiveness
-
-Prevents blocking API requests
-
-Enables scheduled tasks
-
-## 🗃 Caching Layer
-
-Redis caching is implemented for:
-
-Dashboard statistics
-
-Analytics queries
-
-Heavy read operations
-
-This improves:
-
-Performance • Speed • Scalability
-
-## 🌐 API Documentation (Swagger)
-
-Interactive API documentation is available via Swagger UI.
-
-/api/docs/
-
-
-Provides:
-
-Live endpoint testing
-
-Request/response examples
-
-Authentication testing
-
-Schema visualization
-
-## 🛡 Security Best Practices Implemented
-
-JWT authentication
-
-CORS configuration
-
-Input validation
-
-Permissions & access control
-
-Environment variable configuration
-
-SQL injection prevention
-
-## CSRF protection (where applicable)
-
-🚀 Getting Started (Local Setup)
-1️⃣ Clone Repository
-git clone https://github.com/yourusername/job_trackerapi.git
-cd job_trackerapi
-
-## 2️⃣ Create Virtual Environment
+# Job Tracker API
+
+A Django REST Framework API for tracking job applications, managing application statuses, and generating job-search analytics for the Job Tracker frontend.
+
+## Problem It Solves
+
+Job seekers often manage applications across spreadsheets, notes, and email threads. This API centralizes application data, authenticates users with JWT, protects each user's records, and exposes analytics that help users understand their job-search pipeline.
+
+## Features
+
+- Email-based user registration and JWT login
+- Authenticated profile endpoint
+- Create, read, update, and delete job applications
+- Per-user application isolation
+- Application statuses: applied, interview, offer, rejected
+- Analytics totals by status
+- OpenAPI schema and Swagger documentation
+- Environment-based configuration for local and deployed environments
+- Local-safe cache and Celery defaults
+- API tests for authentication, CRUD, permissions, and analytics
+
+## Tech Stack
+
+- Python 3.11+
+- Django 5
+- Django REST Framework
+- Simple JWT
+- drf-spectacular
+- django-cors-headers
+- Celery with Redis support for production workers
+- SQLite for local development
+- Gunicorn for deployment
+
+## Installation
+
+```bash
+git clone https://github.com/piuswanyangu/job-trackerapi.git
+cd job-trackerapi
 python -m venv venv
-source venv/bin/activate
-
-## 3️⃣ Install Dependencies
+venv\Scripts\activate
 pip install -r requirements.txt
-
-## 4️⃣ Create .env File
-touch .env
-
-
-Add:
-
-DEBUG=True
-SECRET_KEY=your-secret-key
-DATABASE_URL=sqlite:///db.sqlite3
-
-## 5️⃣ Run Migrations
+copy .env.example .env
 python manage.py migrate
+```
 
-## 6️⃣ Create Superuser
-python manage.py createsuperuser
+On macOS or Linux, activate the virtual environment with:
 
-## 7️⃣ Run Server
+```bash
+source venv/bin/activate
+```
+
+## Environment Variables
+
+Create `.env` from `.env.example`.
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `SECRET_KEY` | Yes | Django secret key |
+| `DEBUG` | No | Use `True` locally and `False` in production |
+| `ALLOWED_HOSTS` | No | Comma-separated hostnames |
+| `CORS_ALLOWED_ORIGINS` | No | Comma-separated frontend origins |
+| `DATABASE_URL` | No | Reserved for production database configuration |
+| `CELERY_BROKER_URL` | No | Redis broker URL for deployed Celery workers |
+| `CELERY_RESULT_BACKEND` | No | Celery result backend |
+| `CELERY_TASK_ALWAYS_EAGER` | No | Run Celery tasks synchronously in local development |
+
+## Run Locally
+
+```bash
 python manage.py runserver
+```
 
-## 8️⃣ Access Admin Panel
-http://127.0.0.1:8000/admin/
+The API will be available at:
 
-## 🧪 API Testing
+```text
+http://127.0.0.1:8000
+```
 
-You can test APIs using:
+Swagger docs:
 
-Postman
+```text
+http://127.0.0.1:8000/api/docs/
+```
 
-Thunder Client
+## API Endpoints
 
-Swagger UI
+### Auth
 
-## 📈 Performance & Scalability
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `POST` | `/api/auth/register/` | Register a new user |
+| `POST` | `/api/auth/login/` | Get JWT access and refresh tokens |
+| `POST` | `/api/auth/token/refresh/` | Refresh access token |
+| `GET` | `/api/auth/me/` | Get authenticated user profile |
 
-This backend is designed to scale using:
+### Applications
 
-Async task queues
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/applications/applications/` | List current user's applications |
+| `POST` | `/api/applications/applications/` | Create application |
+| `GET` | `/api/applications/applications/{id}/` | Get application detail |
+| `PATCH` | `/api/applications/applications/{id}/` | Update application |
+| `DELETE` | `/api/applications/applications/{id}/` | Delete application |
 
-Redis caching
+### Analytics
 
-Optimized querysets
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/applications/analytics/` | Get status counts and totals |
 
-Proper indexing
+## Example Application Payload
 
-Stateless JWT authentication
+```json
+{
+  "company_name": "Acme",
+  "job_title": "Frontend Engineer",
+  "status": "applied"
+}
+```
 
-## 🧩 Future Improvements Roadmap
+## Folder Structure
 
-Email notifications
+```text
+apps/
+  accounts/       User model, registration, JWT profile endpoints
+  applications/   Job application CRUD, analytics, signals, tests
+  core/           Shared middleware and background task helpers
+config/           Django settings, URLs, Celery setup
+manage.py         Django command entry point
+requirements.txt  Python dependencies
+```
 
-WebSocket real-time updates
+## Testing
 
-Resume parsing
+```bash
+python manage.py check
+python manage.py makemigrations --check --dry-run
+python manage.py test
+```
 
-AI-powered job matching
+## Deployment
 
-Recommendation system
+1. Set `DEBUG=False`.
+2. Set a strong `SECRET_KEY`.
+3. Configure `ALLOWED_HOSTS` and `CORS_ALLOWED_ORIGINS`.
+4. Use a production database and set the appropriate database environment values.
+5. Run migrations during deployment.
+6. Run `python manage.py collectstatic --noinput`.
+7. Start the app with Gunicorn:
 
-Microservices architecture
+```bash
+gunicorn config.wsgi:application
+```
 
-## 🎯 Design Philosophy
+For production Celery workers, set `CELERY_TASK_ALWAYS_EAGER=False` and provide Redis-backed `CELERY_BROKER_URL` and `CELERY_RESULT_BACKEND`.
 
-This backend follows:
+## Screenshots
 
-SOLID principles
+Screenshots are not included because this repository is the backend API. Add screenshots of Swagger docs or API client examples if needed.
 
-Clean Architecture
+## Future Improvements
 
-Modular Django apps
+- Add PostgreSQL production settings
+- Add filtering and search by company, title, and status
+- Add due dates and follow-up reminders
+- Add pagination metadata to frontend-facing list responses
+- Add CI for tests and migration checks
+- Add rate limiting for auth endpoints
 
-RESTful API design
+## Author
 
-Separation of concerns
-
-## 👨‍💻 Author
-
-## Pius Ndubi
-## Full Stack Software Developer
-
-## 📧 Email: ndubipius6@gmail.com
-
-## 🌍 Nairobi, Kenya
+Built by [Pius Wanyangu](https://github.com/piuswanyangu).

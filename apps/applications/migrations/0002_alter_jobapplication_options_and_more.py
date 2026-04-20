@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='jobapplication',
             name='status',
-            field=models.CharField(choices=[('applied', 'Applied'), ('interview', 'Interview'), ('rejected', 'Rejected'), ('accepted', 'Accepted')], default='applied', max_length=20),
+            field=models.CharField(choices=[('applied', 'Applied'), ('interview', 'Interview'), ('offer', 'Offer'), ('rejected', 'Rejected')], default='applied', max_length=20),
         ),
         migrations.CreateModel(
             name='ApplicationAnalytics',

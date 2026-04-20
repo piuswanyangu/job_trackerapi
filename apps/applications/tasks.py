@@ -1,5 +1,9 @@
-from celery import shared_task
-from prompt_toolkit import Application
+try:
+    from celery import shared_task
+except ModuleNotFoundError:
+    def shared_task(func):
+        return func
+
 from .models import ApplicationAnalytics, JobApplication
 from django.core.cache import cache
 from django.db.models import Count
@@ -15,7 +19,7 @@ def cache_job_applications(user_id):
 # -----------------------------
 @shared_task
 def generate_user_analytics(user_id):
-    qs = Application.objects.filter(user_id=user_id)
+    qs = JobApplication.objects.filter(user_id=user_id)
 
     stats = qs.values("status").annotate(count=Count("id"))
 
@@ -27,7 +31,8 @@ def generate_user_analytics(user_id):
     }
 
     for s in stats:
-        data[s["status"]] = s["count"]
+        status_key = "interviewed" if s["status"] == "interview" else s["status"]
+        data[status_key] = s["count"]
 
     ApplicationAnalytics.objects.update_or_create(
         user_id=user_id,
