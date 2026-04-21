@@ -141,10 +141,12 @@ python manage.py test
 
 ## Deployment
 
+This repository includes `render.yaml`, `Procfile`, `runtime.txt`, and `DEPLOYMENT.md` for Render deployment.
+
 1. Set `DEBUG=False`.
 2. Set a strong `SECRET_KEY`.
-3. Configure `ALLOWED_HOSTS` and `CORS_ALLOWED_ORIGINS`.
-4. Use a production database and set the appropriate database environment values.
+3. Configure `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, and `CSRF_TRUSTED_ORIGINS`.
+4. Set `DATABASE_URL` to a production PostgreSQL database.
 5. Run migrations during deployment.
 6. Run `python manage.py collectstatic --noinput`.
 7. Start the app with Gunicorn:

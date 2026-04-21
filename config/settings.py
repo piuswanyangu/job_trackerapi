@@ -8,6 +8,8 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+import dj_database_url
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,6 +33,12 @@ CORS_ALLOWED_ORIGINS = [
         "CORS_ALLOWED_ORIGINS",
         "http://localhost:3000,http://127.0.0.1:3000",
     ).split(",")
+    if origin.strip()
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin.strip()
 ]
 
@@ -58,8 +66,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -149,21 +158,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': os.environ.get("DB_ENGINE", "django.db.backends.sqlite3"),
-        'NAME': os.environ.get("DB_NAME", BASE_DIR / 'db.sqlite3'),
-        'USER': os.environ.get("DB_USER", ""),
-        'PASSWORD': os.environ.get("DB_PASSWORD", ""),
-        'HOST': os.environ.get("DB_HOST", ""),
-        'PORT': os.environ.get("DB_PORT", ""),
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {
+        "default": dj_database_url.config(
+            conn_max_age=int(os.environ.get("DB_CONN_MAX_AGE", "600")),
+            ssl_require=os.environ.get("DB_SSL_REQUIRE", "True").lower()
+            in {"1", "true", "yes", "on"},
+        )
     }
-}
-
-if DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3":
-    DATABASES["default"] = {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.environ.get("DB_NAME", BASE_DIR / "db.sqlite3"),
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.environ.get("DB_NAME", BASE_DIR / "db.sqlite3"),
+        }
     }
 
 # Password validation
@@ -183,8 +191,12 @@ USE_TZ = True
 # Static files
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CONN_MAX_AGE = 0
+CONN_MAX_AGE = int(os.environ.get("DB_CONN_MAX_AGE", "0"))
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG

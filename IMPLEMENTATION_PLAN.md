@@ -13,6 +13,8 @@
 - Added API tests for auth, profile, application ownership, CRUD, and analytics.
 - Replaced the broken README with professional setup, API, testing, and deployment documentation.
 - Added `.env.example` for local setup.
+- Added Render deployment files: `render.yaml`, `Procfile`, `runtime.txt`, and `DEPLOYMENT.md`.
+- Added production database parsing, WhiteNoise static serving, trusted origins, and secure cookie settings.
 
 ## Current Production Readiness
 
@@ -20,7 +22,7 @@
 - Migration drift check passes with `python manage.py makemigrations --check --dry-run`.
 - Test suite passes with `python manage.py test`.
 - The API is ready to run locally with SQLite.
-- Deployment requires real production environment variables and database settings.
+- Deployment requires setting the actual Render backend URL and Vercel frontend URL in environment variables.
 
 ## Recommended Next Iteration
 
